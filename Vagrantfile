@@ -3,6 +3,8 @@
 
 BOX_NAME = ENV['BOX_NAME'] || "ubuntu"
 BOX_URI = ENV['BOX_URI'] || "http://files.vagrantup.com/precise64.box"
+BOX_CPU = ENV['BOX_CPU']
+BOX_MEM = ENV['BOX_MEM']
 VF_BOX_URI = ENV['BOX_URI'] || "http://files.vagrantup.com/precise64_vmware_fusion.box"
 AWS_BOX_URI = ENV['BOX_URI'] || "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
 AWS_REGION = ENV['AWS_REGION'] || "us-east-1"
@@ -11,6 +13,7 @@ AWS_INSTANCE_TYPE = ENV['AWS_INSTANCE_TYPE'] || 't1.micro'
 FORWARD_DOCKER_PORTS = ENV['FORWARD_DOCKER_PORTS']
 SSH_PRIVKEY_PATH = ENV['SSH_PRIVKEY_PATH']
 PRIVATE_NETWORK = ENV['PRIVATE_NETWORK']
+
 
 # A script to upgrade from the 12.04 kernel to the raring backport kernel (3.8)
 # and install docker.
@@ -150,6 +153,12 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
     override.vm.provision :shell, :inline => $vbox_script
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    if !BOX_CPU.nil?
+      vb.customize ["modifyvm", :id, "--cpus", BOX_CPU]
+    end
+    if !BOX_MEM.nil?
+      vb.customize ["modifyvm", :id, "--memory", BOX_MEM]
+    end
   end
 end
 
